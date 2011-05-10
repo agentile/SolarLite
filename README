@@ -21,4 +21,8 @@ e.g.
 ./core/script add-controller Index
 ./core/script add-model Posts
 
+Example blog app found here: http://agentile.com/public/solarlite-simple-blog-app.tar.gz
+
+Just import the root level .sql file, point your apache doc root to /public and edit the /config/config.php for your box.
+
 -Anthony Gentile / http://agentile.com
