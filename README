@@ -1,0 +1,24 @@
+== SolarLite ==
+
+This is a slimmed down version of SolarPHP (www.solarphp.com) the majority of code found 
+is credited to the contributors of SolarPHP and namely Paul M. Jones. I simply stripped 
+out a lot of the SolarPHP such as dependency injection, ORM, view helpers and a lot of 
+other good stuff to make for a smaller footprint. Those wanting a more full fledged 
+framework should download SolarPHP
+
+The purpose of created this slimmed down version is that I would see fellow coworkers being 
+adverse to using a framework for a project when they either were under a tight deadline and 
+didn't want to spend time learning the framework or they simply felt the project wouldn't be
+that complex and didn't want to have a large codebase for framework functionality that they 
+might not ever use. As a result a rushed MVC framework from scratch would be made, which 
+usually means the future maintenance/rework of that code would require more effort. This 
+framework gives a good foundation and possible stepping stone to a full fledged framework,
+namely SolarPHP if wanted.
+
+You can issue some command line scripts to quickly create some shell model and controller spaces
+e.g.
+
+./core/script add-controller Index
+./core/script add-model Posts
+
+-Anthony Gentile / http://agentile.com

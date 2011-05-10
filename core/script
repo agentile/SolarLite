@@ -1,0 +1,109 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Error reporting turned way up
+ */
+error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors', true);
+ini_set('html_errors', false);
+$argv = empty($_SERVER['argv']) ? array(0 => '') : $_SERVER['argv'];
+
+$system = dirname(dirname(__FILE__));
+
+if (!isset($argv[1]) || !isset($argv[2])) {
+    help();
+    exit(0);
+}
+
+switch ($argv[1]) {
+    case 'add-controller':
+        addController($argv[2]);
+    break;
+    case 'add-model':
+        addModel($argv[2]);
+    break;
+    default:
+        exit(0);
+    break;
+}
+
+function help() 
+{
+    echo "Usage: \n" .
+         "Add new controller: ./core/script add-controller ControllerName\n" .
+         "Add new model: ./core/script add-model ModelName\n";
+}
+
+function addController($name)
+{
+    global $system;
+    $controller_dir = $system 
+        . DIRECTORY_SEPARATOR 
+        . 'app'
+        . DIRECTORY_SEPARATOR 
+        . 'controller'
+        . DIRECTORY_SEPARATOR;
+        
+    $inflect_file = $system 
+        . DIRECTORY_SEPARATOR 
+        . 'core'
+        . DIRECTORY_SEPARATOR 
+        . 'solarlite'
+        . DIRECTORY_SEPARATOR 
+        . 'inflect.php';
+        
+    require $inflect_file;
+    $inflect = new SolarLite_Inflect();
+    $class_name = $inflect->camelToUnder($name);
+    $controller_folder = $controller_dir
+        . strtolower($class_name);
+    $controller_file = $controller_dir
+        . strtolower($class_name)
+        . '.php';
+        
+    $controller = "<?php\nclass App_Controller_$class_name extends SolarLite_Controller\n{\n    protected \$_action_default = 'index';\n\n    public function actionIndex()\n    {\n    }\n}";
+    if (!file_exists($controller_file)) {
+        file_put_contents($controller_file, $controller);
+    }
+    
+    mkdir($controller_folder, 0775);
+    mkdir($controller_folder . DIRECTORY_SEPARATOR . 'view', 0775);
+    $view = "<?php echo \$this->locale('WELCOME');?>";
+    file_put_contents($controller_folder . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'index.php', $view);
+    mkdir($controller_folder . DIRECTORY_SEPARATOR . 'locale', 0775);
+    $locale = "<?php\nreturn array(\n    'WELCOME' => 'Welcome to your new application.',\n);";
+    file_put_contents($controller_folder . DIRECTORY_SEPARATOR . 'locale' . DIRECTORY_SEPARATOR . 'en_US.php', $locale);
+}
+
+function addModel($name)
+{
+    global $system;
+    $model_dir = $system 
+        . DIRECTORY_SEPARATOR 
+        . 'app'
+        . DIRECTORY_SEPARATOR 
+        . 'model'
+        . DIRECTORY_SEPARATOR;
+        
+    $inflect_file = $system 
+        . DIRECTORY_SEPARATOR 
+        . 'core'
+        . DIRECTORY_SEPARATOR 
+        . 'solarlite'
+        . DIRECTORY_SEPARATOR 
+        . 'inflect.php';
+        
+    require_once $inflect_file;
+    $inflect = new SolarLite_Inflect();
+    $class_name = $inflect->camelToUnder($name);
+    $table_name = strtolower($class_name);
+    
+    $model_file = $model_dir
+        . $table_name
+        . '.php';
+        
+    $model = "<?php\nclass App_Model_$class_name extends SolarLite_Model\n{\n    protected \$_table_name = '$table_name';\n    protected \$_model_name = '$class_name';\n    protected \$_primary_col = null;\n}";
+    if (!file_exists($model_file)) {
+        file_put_contents($model_file, $model);
+    }
+}
