@@ -373,9 +373,21 @@ class SolarLite_DB
                 $repeat[$key] ++;
                 $name = $key . $repeat[$key];
             }
-            
+           
+            if (is_int($data[$key])) {
+                $param = PDO::PARAM_INT;
+            } else if (is_bool($data[$key])) {
+                $param = PDO::PARAM_BOOL;
+            } else if (is_null($data[$key])) {
+                $param = PDO::PARAM_NULL;
+            } else if (is_string($data[$key])) {
+                $param = PDO::PARAM_STR;
+            } else {
+                $param = false;
+            }
+
             // bind the value to the placeholder name
-            $prep->bindValue($name, $data[$key]);
+            $prep->bindValue($name, $data[$key], $param);
         }
     }
     
