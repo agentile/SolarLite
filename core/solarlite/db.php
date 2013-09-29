@@ -274,19 +274,7 @@ class SolarLite_DB
         $this->_bind($prep, $data);
         
         // now try to execute
-        try {
-            $prep->execute();
-        } catch (PDOException $e) {
-#            echo '<pre>';
-            throw new Exception('Query Failed:' . var_export(array(
-                'pdo_code'  => $e->getCode(),
-                'pdo_text'  => $e->getMessage(),
-                'stmt'      => $stmt,
-                'data'      => $data,
-                'pdo_trace' => $e->getTraceAsString(),
-            ), true));
-#            echo '</pre>';
-        }
+        $prep->execute();
         
         // done!
         return $prep;
@@ -305,17 +293,8 @@ class SolarLite_DB
     protected function _prepare($stmt)
     {
         // prepare the statment
-        try {
-            $prep = $this->_pdo->prepare($stmt);
-            $prep->conn = $this->_pdo->conn;
-        } catch (PDOException $e) {
-            throw new Exception('Prepare Failed', array(
-                'pdo_code'  => $e->getCode(),
-                'pdo_text'  => $e->getMessage(),
-                'stmt'      => $stmt,
-                'pdo_trace' => $e->getTraceAsString(),
-            ));
-        }
+        $prep = $this->_pdo->prepare($stmt);
+        $prep->conn = $this->_pdo->conn;
         
         return $prep;
     }

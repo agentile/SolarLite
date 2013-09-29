@@ -392,37 +392,45 @@ abstract class SolarLite_Cache {
     abstract public function deleteAll();
         
     /**
-     * 
+     *
      * Returns the adapter-specific name for the entry key.
-     * 
+     *
      * Cache adapters do not always use the identifier you specify for
      * cache entries.  For example, the [Solar_Cache_Adapter_File:HomePage file adapter]
-     * names the cache entries based on an MD5 hash of the entry ID. 
+     * names the cache entries based on an MD5 hash of the entry ID.
      * This method tells you what the adapter is using as the name for
      * the cache entry.
-     * 
+     *
      * {{code: php
      *     // create a request object
      *     $request = Solar_Registry::get('request');
-     *     
+     *
      *     // create an entry ID named for the current URI
      *     $id = $request->server('REQUEST_URI');
-     *     
+     *
      *     // create a cache object
      *     $cache = Solar::factory('Solar_Cache');
-     *     
+     *
      *     // find out what the underlying cache adapter uses as the entry name
      *     $real_name = $cache->entry($id);
      * }}
-     * 
-     * @param string $key The entry ID.
-     * 
+     *
+     * @param mixed $key The entry ID or an array of entry IDs.
+     *
      * @return mixed The adapter-specific name for the entry key.
-     * 
+     *
      */
     public function entry($key)
     {
-        return $this->_prefix . $key;
+        if (is_array($key)) {
+            $prefixed_keys = array();
+            foreach ($key as $k) {
+                $prefixed_keys[] = $this->_prefix . $k;
+            }
+            return $prefixed_keys;
+        } else {
+            return $this->_prefix . $key;
+        }
     }
     
     /**
